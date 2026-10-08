@@ -1,0 +1,12 @@
+﻿{
+  "name": "1dollar-challenge",
+  "version": "1.0.0",
+  "description": "Le Défi du 1 $ - Test public de generation de revenus avec l'IA",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
