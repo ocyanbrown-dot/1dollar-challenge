@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || '';
 const BASE_URL = 'https://1dollar-challenge.com';
 const DATA_FILE = path.join(__dirname, 'data', 'challenge.json');
-const PORT = process.env.PORT || 3456;
+const PORT = process.env.PORT || 8080;
 
 function loadData() {
   try { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8')); }
@@ -169,7 +169,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  const publicDir = path.join(__dirname, 'public');
+  const publicDir = path.join(__dirname, 'appweb');
   let filePath = pathname === '/' ? '/index.html' : pathname;
   const fullPath = path.join(publicDir, filePath);
   const ext = path.extname(fullPath);
