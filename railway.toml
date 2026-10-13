@@ -1,0 +1,5 @@
+﻿[deploy]
+start_command = "node server.js"
+restart_policy_type = "ON_FAILURE"
+restart_policy_max_retries = 10
+port = 3456
