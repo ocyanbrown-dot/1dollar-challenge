@@ -1,147 +1,323 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Le D?fi du 1 $</title>
+  <title>Le Défi du 1 $ — Une expérience publique</title>
+  <meta name="description" content="Un test public : envoyeriez-vous 1 $ à un inconnu ? Regardez le compteur en direct.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --ink: #16130E;
+      --ink-soft: #57503F;
+      --ink-faint: #8A8272;
+      --paper: #FAF6EE;
+      --paper-deep: #F2ECDF;
+      --line: #E3DBCA;
+      --accent: #D95B29;
+      --accent-ink: #FFFFFF;
+      --ok: #3E7A4E;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0a0a0a;
-      color: #e0e0e0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-    .logo {
-      font-size: 48px;
-      font-weight: 900;
+    ::selection { background: var(--accent); color: #fff; }
+
+    /* ---------- paid banner ---------- */
+    .paid-banner {
+      display: none;
+      background: var(--accent);
+      color: var(--accent-ink);
+      padding: 14px 20px;
       text-align: center;
-      background: linear-gradient(135deg, #00ff88, #00cc66);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 8px;
-    }
-    .subtitle {
-      text-align: center;
-      color: #888;
-      font-size: 14px;
-      margin-bottom: 40px;
-    }
-    .counters {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 40px;
-    }
-    .counter-card {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-    }
-    .counter-value {
-      font-size: 32px;
-      font-weight: 800;
-      color: #00ff88;
-    }
-    .counter-label {
-      font-size: 12px;
-      color: #666;
-      margin-top: 4px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .rules {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 32px;
-    }
-    .rules h3 {
-      font-size: 14px;
-      color: #888;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .rules ol {
-      list-style: none;
-      counter-reset: rule;
-    }
-    .rules li {
-      counter-increment: rule;
-      padding: 8px 0;
+      font-weight: 600;
       font-size: 15px;
-      color: #ccc;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      letter-spacing: 0.01em;
     }
-    .rules li::before {
-      content: counter(rule);
-      width: 24px;
-      height: 24px;
-      background: #00ff88;
-      color: #0a0a0a;
-      border-radius: 50%;
+    .paid-banner.active { display: block; }
+
+    /* ---------- layout ---------- */
+    .frame {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ---------- header ---------- */
+    header.site {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      padding: 28px 0;
+    }
+    .wordmark {
+      font-family: "Fraunces", serif;
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+    }
+    .wordmark span { color: var(--accent); }
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 14px;
+      background: #fff;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.75); }
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      padding: 56px 0 48px;
+    }
+    .kicker {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards;
+    }
+    h1 {
+      font-family: "Fraunces", serif;
+      font-weight: 500;
+      font-size: clamp(40px, 8vw, 72px);
+      line-height: 1.02;
+      letter-spacing: -0.025em;
+      max-width: 14ch;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .lede {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink-soft);
+      max-width: 52ch;
+      margin-bottom: 36px;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+    }
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
     }
     .cta {
       display: inline-block;
-      width: 100%;
-      padding: 18px;
-      background: #00ff88;
-      color: #0a0a0a;
-      font-size: 18px;
-      font-weight: 700;
+      padding: 17px 34px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
       border: none;
-      border-radius: 12px;
+      border-radius: 999px;
       cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      transition: transform 0.1s, box-shadow 0.2s;
+      transition: background 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s;
     }
     .cta:hover {
+      background: var(--accent);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 255, 136, 0.3);
+      box-shadow: 0 10px 30px rgba(217, 91, 41, 0.28);
     }
-    .cta:active {
-      transform: translateY(0);
+    .cta:active { transform: translateY(0); }
+    .ghost-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .ghost-link:hover { color: var(--ink); border-color: var(--ink); }
+
+    /* ---------- stats ---------- */
+    .stats-section {
+      padding: 8px 0 56px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--line);
+    }
+    .stat {
+      padding: 28px 8px 8px 0;
+    }
+    .stat-value {
+      font-family: "Fraunces", serif;
+      font-weight: 500;
+      font-size: clamp(32px, 5vw, 52px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-label {
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    /* ---------- how it works ---------- */
+    .how {
+      background: var(--paper-deep);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 72px 0;
+    }
+    .how h2 {
+      font-family: "Fraunces", serif;
+      font-weight: 500;
+      font-size: clamp(28px, 4.5vw, 40px);
+      letter-spacing: -0.02em;
+      margin-bottom: 48px;
+      max-width: 24ch;
+      line-height: 1.15;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+    .step {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .step.in { opacity: 1; transform: translateY(0); }
+    .step-num {
+      font-family: "Fraunces", serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .step h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .step p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    /* ---------- story ---------- */
+    .story {
+      padding: 80px 0;
+    }
+    .story blockquote {
+      font-family: "Fraunces", serif;
+      font-weight: 500;
+      font-size: clamp(22px, 3.5vw, 32px);
+      line-height: 1.35;
+      letter-spacing: -0.015em;
+      max-width: 30ch;
+      border-left: 2px solid var(--accent);
+      padding-left: 28px;
+    }
+    .story .byline {
+      margin-top: 24px;
+      margin-left: 30px;
+      font-size: 14px;
+      color: var(--ink-faint);
+    }
+
+    /* ---------- footer ---------- */
+    footer.site {
+      border-top: 1px solid var(--line);
+      padding: 40px 0 56px;
     }
     .disclaimer {
-      text-align: center;
-      margin-top: 32px;
-      font-size: 12px;
-      color: #555;
-      line-height: 1.6;
+      font-size: 13px;
+      color: var(--ink-faint);
+      line-height: 1.8;
+      max-width: 60ch;
     }
     .disclaimer a {
-      color: #777;
+      color: var(--ink-soft);
       text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      transition: color 0.2s;
     }
+    .disclaimer a:hover { color: var(--accent); }
     .domain-note {
-      text-align: center;
-      margin-top: 16px;
-      font-size: 11px;
-      color: #444;
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--ink-faint);
+      opacity: 0.8;
     }
+    .unsubscribe-tag {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 16px;
+      cursor: pointer;
+      background: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .unsubscribe-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ---------- modal ---------- */
     .modal-overlay {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
+      inset: 0;
+      background: rgba(22, 19, 14, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 100;
       align-items: center;
       justify-content: center;
@@ -149,272 +325,379 @@
     }
     .modal-overlay.active { display: flex; }
     .modal {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 16px;
-      padding: 32px;
+      background: var(--paper);
+      border-radius: 20px;
+      padding: 40px 36px 36px;
       max-width: 420px;
       width: 100%;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(22, 19, 14, 0.35);
+      animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
     .modal h2 {
-      font-size: 20px;
-      margin-bottom: 16px;
-      color: #e0e0e0;
+      font-family: "Fraunces", serif;
+      font-weight: 500;
+      font-size: 26px;
+      letter-spacing: -0.015em;
+      margin-bottom: 12px;
     }
     .modal p {
-      font-size: 14px;
-      color: #888;
-      margin-bottom: 20px;
-      line-height: 1.5;
+      font-size: 14.5px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin-bottom: 24px;
     }
     .modal input {
       width: 100%;
-      padding: 14px;
-      background: #0a0a0a;
-      border: 1px solid #333;
-      border-radius: 8px;
-      color: #e0e0e0;
+      padding: 15px 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--ink);
       font-size: 16px;
-      margin-bottom: 16px;
+      font-family: inherit;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
     }
     .modal input:focus {
       outline: none;
-      border-color: #00ff88;
+      border-color: var(--accent);
     }
-    .modal .btn-primary {
+    .btn-primary {
       width: 100%;
-      padding: 14px;
-      background: #00ff88;
-      color: #0a0a0a;
-      font-size: 16px;
-      font-weight: 700;
+      padding: 15px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 15.5px;
+      font-weight: 600;
+      font-family: inherit;
       border: none;
-      border-radius: 8px;
+      border-radius: 999px;
       cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
     }
-    .modal .btn-secondary {
+    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.6; cursor: default; transform: none; }
+    .btn-secondary {
       width: 100%;
-      padding: 14px;
+      padding: 13px;
       background: transparent;
-      color: #888;
+      color: var(--ink-faint);
       font-size: 14px;
-      border: 1px solid #333;
-      border-radius: 8px;
+      font-weight: 500;
+      font-family: inherit;
+      border: 1px solid var(--line);
+      border-radius: 999px;
       cursor: pointer;
-      margin-top: 8px;
+      margin-top: 10px;
+      transition: color 0.2s, border-color 0.2s;
     }
-    .success-box {
-      display: none;
-      text-align: center;
-    }
-    .success-box.active { display: block; }
-    .success-box .code-display {
-      font-size: 28px;
-      font-weight: 900;
-      color: #00ff88;
-      background: #0a0a0a;
-      border: 2px dashed #00ff88;
-      border-radius: 12px;
-      padding: 16px;
-      margin: 20px 0;
-      letter-spacing: 2px;
-    }
-    .success-box .share-hint {
-      font-size: 14px;
-      color: #888;
-      line-height: 1.6;
-    }
+    .btn-secondary:hover { color: var(--ink); border-color: var(--ink-faint); }
     .close-modal {
-      float: right;
+      position: absolute;
+      top: 18px; right: 18px;
       background: none;
       border: none;
-      color: #666;
-      font-size: 24px;
+      color: var(--ink-faint);
+      font-size: 26px;
       cursor: pointer;
       line-height: 1;
+      padding: 4px;
     }
-    .paid-banner {
-      display: none;
-      background: #00ff88;
-      color: #0a0a0a;
-      padding: 12px 20px;
-      text-align: center;
-      font-weight: 700;
+    .close-modal:hover { color: var(--ink); }
+    .success-box { display: none; text-align: center; }
+    .success-box.active { display: block; }
+    .success-box h2 { margin-bottom: 20px; }
+    .code-display {
+      font-family: "Fraunces", serif;
+      font-size: 30px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      background: #fff;
+      border: 1.5px dashed var(--accent);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+      font-variant-numeric: tabular-nums;
+    }
+    .share-hint {
       font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.65;
     }
-    .paid-banner.active { display: block; }
+    .success-box .btn-primary { margin-top: 24px; }
+    .success-check {
+      width: 52px; height: 52px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: var(--ok);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 720px) {
+      .hero { padding: 36px 0 36px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px 0; }
+      .steps { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
+      .how { padding: 56px 0; }
+      .story { padding: 56px 0; }
+    }
+    @media (max-width: 440px) {
+      .steps { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .cta { text-align: center; }
+      .ghost-link { text-align: center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .kicker, h1, .lede, .hero-actions { opacity: 1; transform: none; }
+      .step { opacity: 1; transform: none; }
+    }
   </style>
 </head>
 <body>
   <div class="paid-banner" id="paidBanner">
-    Paiement confirm? ! Tu es dans le D?fi.
+    Paiement confirmé. Tu es dans le Défi.
   </div>
 
-  <div class="container">
-    <div class="logo">1$</div>
-    <div class="subtitle">Test public de g?n?ration de revenus avec l'IA</div>
+  <div class="frame">
+    <header class="site">
+      <div class="wordmark">1<span>$</span> — le défi</div>
+      <div class="live-pill"><span class="live-dot"></span>En direct</div>
+    </header>
 
-    <div class="counters">
-      <div class="counter-card">
-        <div class="counter-value" id="totalDollar">$0</div>
-        <div class="counter-label">Compteur</div>
+    <section class="hero">
+      <div class="kicker">Expérience publique · Propulsée par l'IA</div>
+      <h1>Enverriez-vous <em>1&nbsp;$</em> à un inconnu&nbsp;?</h1>
+      <p class="lede">
+        J'ai demandé à une IA de trouver la manière la plus simple de générer des revenus en ligne.
+        Sa réponse : ce site, ce test, ce compteur. Rien ne vous force à envoyer quoi que ce soit.
+        Envoyez 1&nbsp;$, ou bien ne l'envoyez pas. Les deux comptent.
+      </p>
+      <div class="hero-actions">
+        <button class="cta" id="joinBtn">Rejoindre pour 1 $</button>
+        <a class="ghost-link" href="#regles">Comment ça marche ↓</a>
       </div>
-      <div class="counter-card">
-        <div class="counter-value" id="totalParticipants">0</div>
-        <div class="counter-label">Participants</div>
-      </div>
-      <div class="counter-card">
-        <div class="counter-value" id="activeCodes">0</div>
-        <div class="counter-label">Codes actifs</div>
-      </div>
-      <div class="counter-card">
-        <div class="counter-value" id="totalShares">0</div>
-        <div class="counter-label">Partages</div>
-      </div>
-    </div>
+    </section>
 
-    <div class="rules">
-      <h3>Les r?gles</h3>
-      <ol>
-        <li>Envoie 1 $</li>
-        <li>Re?ois un code unique</li>
-        <li>Partage-le ? 3 personnes si tu veux</li>
-        <li>Regarde le compteur public en direct</li>
-      </ol>
-    </div>
-
-    <button class="cta" id="joinBtn">Rejoindre pour 1 $</button>
-
-    <div class="disclaimer">
-      Ton adresse a ?t? trouv?e dans des sources publiques.<br>
-      Si tu ne veux rien en entendre : <a href="#" id="unsubscribeLink">d?sinscription</a><br>
-      Pas d'abonnement. Pas de spam. Pas d'arnaque.<br>
-      Questions ? <a href="mailto:contact@1dollar-challenge.com">contact@1dollar-challenge.com</a>
-    </div>
-    <div class="domain-note">
-      Domaine achet? pour l'occasion. Bo?te email cr??e pour ce test.
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <button class="close-modal" id="closeModal">&times;</button>
-      <div id="joinForm">
-        <h2>Rejoindre le D?fi</h2>
-        <p>Envoie 1 $ pour recevoir ton code unique. Tu pourras le partager ? 3 personnes.</p>
-        <input type="email" id="emailInput" placeholder="ton@email.com">
-        <button class="btn-primary" id="payBtn">Envoyer 1 $</button>
-        <button class="btn-secondary" id="cancelBtn">Annuler</button>
-      </div>
-      <div class="success-box" id="successBox">
-        <h2>Tu es dans le D?fi !</h2>
-        <div class="code-display" id="codeDisplay">1D-XXXX-XXXX</div>
-        <div class="share-hint">
-          Partage ce code ? 3 personnes.<br>
-          Chaque partage fait monter le compteur.
+    <section class="stats-section" aria-label="Statistiques en direct">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-value" id="totalDollar">$0</div>
+          <div class="stat-label">Dans la cagnotte</div>
         </div>
-        <button class="btn-primary" id="copyBtn" style="margin-top:20px">Copier mon code</button>
-        <button class="btn-secondary" id="doneBtn">Fermer</button>
+        <div class="stat">
+          <div class="stat-value" id="totalParticipants">0</div>
+          <div class="stat-label">Participants</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="activeCodes">0</div>
+          <div class="stat-label">Codes actifs</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="totalShares">0</div>
+          <div class="stat-label">Partages</div>
+        </div>
       </div>
-    </div>
+    </section>
   </div>
 
-  <script>
-    const API = window.location.origin;
-    const params = new URLSearchParams(window.location.search);
-    
-    // Show paid banner if redirected from Stripe
-    if (params.get('paid') === '1') {
-      document.getElementById('paidBanner').classList.add('active');
-      const code = params.get('code');
-      if (code) {
-        document.getElementById('codeDisplay').textContent = code;
-        document.getElementById('joinForm').style.display = 'none';
-        document.getElementById('successBox').classList.add('active');
-        document.getElementById('modalOverlay').classList.add('active');
-      }
-      const session_id_param = params.get('session_id');
-      // Reconcile with server (in case webhook missed the payment)
-      if (session_id_param) {
-        fetch(API + '/api/reconcile', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ session_id: session_id_param })
-        }).catch(() => {});
-      }
-      history.replaceState({}, '', window.location.pathname);
+  <section class="how" id="regles">
+    <div class="frame">
+      <h2>Un jeu en quatre temps. Rien de plus.</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Vous envoyez 1 $</h3>
+          <p>Un dollar. Pas deux, pas trois. Un paiement simple via Stripe, le service qui traite des millions de transactions par jour.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Vous recevez un code</h3>
+          <p>Un code unique, juste à vous. C'est votre preuve que vous avez joué le jeu.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Vous le partagez… ou pas</h3>
+          <p>Partagez-le à trois personnes si l'envie vous prend. Aucun engagement, aucune suite.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3>Vous regardez le compteur</h3>
+          <p>Il augmente en direct, pour tout le monde. C'est le seul objectif : voir jusqu'où un dollar peut aller.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="frame">
+    <section class="story">
+      <blockquote>
+        « Je cherche des moyens créatifs de générer de l'argent avec l'IA. Alors autant que ce soit une expérience amusante. »
+      </blockquote>
+      <div class="byline">— L'entrepreneur derrière ce défi</div>
+    </section>
+
+    <footer class="site">
+      <div class="disclaimer">
+        Votre adresse a été trouvée dans des sources publiques (réseaux sociaux, annuaires). Aucun traçage ciblée n'a été effectué.<br>
+        Pas d'abonnement. Pas de spam. Pas d'arnaque. Le paiement est traité par <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>.<br>
+        Questions&nbsp;? Écrivez-moi à <a href="mailto:contact@1dollar-challenge.com">contact@1dollar-challenge.com</a>.
+      </div>
+      <div class="domain-note">Domaine acheté et boîte mail créée spécifiquement pour ce test.</div>
+      <button class="unsubscribe-tag" id="unsubscribeLink">Ça suffit, désinscrivez-moi</button>
+    </footer>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="close-modal" id="closeModal" aria-label="Fermer">&times;</button>
+    <div id="joinForm">
+      <h2>Rejoindre le Défi</h2>
+      <p>Envoyez 1 $ pour recevoir votre code unique. Vous pourrez ensuite le partager à 3 personnes — ou pas.</p>
+      <input type="email" id="emailInput" placeholder="votre@email.com" autocomplete="email">
+      <button class="btn-primary" id="payBtn">Envoyer 1 $</button>
+      <button class="btn-secondary" id="cancelBtn">Non merci</button>
+    </div>
+    <div class="success-box" id="successBox">
+      <div class="success-check">✓</div>
+      <h2>Vous êtes dans le Défi</h2>
+      <div class="code-display" id="codeDisplay">1D-XXXX-XXXX</div>
+      <div class="share-hint">
+        Partagez ce code à 3 personnes si vous voulez.<br>
+        Chaque partage fait monter le compteur.
+      </div>
+      <button class="btn-primary" id="copyBtn">Copier mon code</button>
+      <button class="btn-secondary" id="doneBtn">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = window.location.origin;
+  const params = new URLSearchParams(window.location.search);
+
+  // Return from Stripe: show banner + code, reconcile payment with server.
+  if (params.get('paid') === '1') {
+    document.getElementById('paidBanner').classList.add('active');
+    const code = params.get('code');
+    if (code) {
+      document.getElementById('codeDisplay').textContent = code;
+      document.getElementById('joinForm').style.display = 'none';
+      document.getElementById('successBox').classList.add('active');
+      document.getElementById('modalOverlay').classList.add('active');
     }
-
-    function updateStats() {
-      fetch(API + '/api/stats')
-        .then(r => r.json())
-        .then(d => {
-          document.getElementById('totalDollar').textContent = '$' + d.totalDollar;
-          document.getElementById('totalParticipants').textContent = d.totalParticipants;
-          document.getElementById('activeCodes').textContent = d.activeCodes;
-          document.getElementById('totalShares').textContent = d.shares;
-        })
-        .catch(() => {});
+    const session_id_param = params.get('session_id');
+    if (session_id_param) {
+      fetch(API + '/api/reconcile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: session_id_param })
+      }).catch(function(){});
     }
+    history.replaceState({}, '', window.location.pathname);
+  }
 
-    updateStats();
-    setInterval(updateStats, 5000);
+  function updateStats() {
+    fetch(API + '/api/stats')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        document.getElementById('totalDollar').textContent = '$' + d.totalDollar;
+        document.getElementById('totalParticipants').textContent = d.totalParticipants;
+        document.getElementById('activeCodes').textContent = d.activeCodes;
+        document.getElementById('totalShares').textContent = d.shares;
+      })
+      .catch(function(){});
+  }
 
-    const overlay = document.getElementById('modalOverlay');
-    document.getElementById('joinBtn').addEventListener('click', () => {
-      overlay.classList.add('active');
-      document.getElementById('joinForm').style.display = 'block';
-      document.getElementById('successBox').classList.remove('active');
-    });
-    document.getElementById('closeModal').addEventListener('click', () => overlay.classList.remove('active'));
-    document.getElementById('cancelBtn').addEventListener('click', () => overlay.classList.remove('active'));
+  updateStats();
+  setInterval(updateStats, 5000);
 
-    document.getElementById('payBtn').addEventListener('click', async () => {
-      const email = document.getElementById('emailInput').value.trim();
-      if (!email || !email.includes('@')) {
-        document.getElementById('emailInput').style.borderColor = '#ff4444';
-        return;
-      }
-
-      const btn = document.getElementById('payBtn');
-      btn.textContent = 'Redirection...';
-      btn.disabled = true;
-
-      try {
-        const resp = await fetch(API + '/api/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-        const d = await resp.json();
-
-        if (d.ok && d.url) {
-          window.location.href = d.url;
-        } else {
-          alert(d.error || 'Erreur lors de la cr?ation du paiement');
-          btn.textContent = 'Envoyer 1 $';
-          btn.disabled = false;
+  // Reveal steps on scroll
+  const stepEls = document.querySelectorAll('.step');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry, i) {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const idx = Array.prototype.indexOf.call(stepEls, el);
+          setTimeout(function() { el.classList.add('in'); }, idx * 90);
+          io.unobserve(el);
         }
-      } catch (e) {
-        alert('Erreur : ' + e.message);
+      });
+    }, { threshold: 0.2 });
+    stepEls.forEach(function(el) { io.observe(el); });
+  } else {
+    stepEls.forEach(function(el) { el.classList.add('in'); });
+  }
+
+  const overlay = document.getElementById('modalOverlay');
+  document.getElementById('joinBtn').addEventListener('click', function() {
+    overlay.classList.add('active');
+    document.getElementById('joinForm').style.display = 'block';
+    document.getElementById('successBox').classList.remove('active');
+  });
+  document.getElementById('closeModal').addEventListener('click', function() { overlay.classList.remove('active'); });
+  document.getElementById('cancelBtn').addEventListener('click', function() { overlay.classList.remove('active'); });
+
+  document.getElementById('payBtn').addEventListener('click', async function() {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email || email.indexOf('@') === -1) {
+      document.getElementById('emailInput').style.borderColor = '#D95B29';
+      return;
+    }
+
+    const btn = document.getElementById('payBtn');
+    btn.textContent = 'Redirection...';
+    btn.disabled = true;
+
+    try {
+      const resp = await fetch(API + '/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      });
+      const d = await resp.json();
+      if (d.ok && d.url) {
+        window.location.href = d.url;
+      } else {
+        alert(d.error || 'Erreur lors de la création du paiement');
         btn.textContent = 'Envoyer 1 $';
         btn.disabled = false;
       }
-    });
+    } catch (e) {
+      alert('Erreur : ' + e.message);
+      btn.textContent = 'Envoyer 1 $';
+      btn.disabled = false;
+    }
+  });
 
-    document.getElementById('copyBtn').addEventListener('click', () => {
-      const code = document.getElementById('codeDisplay').textContent;
-      navigator.clipboard.writeText(code).then(() => {
-        document.getElementById('copyBtn').textContent = 'Copi? !';
-        setTimeout(() => document.getElementById('copyBtn').textContent = 'Copier mon code', 2000);
-      });
+  document.getElementById('copyBtn').addEventListener('click', function() {
+    const code = document.getElementById('codeDisplay').textContent;
+    navigator.clipboard.writeText(code).then(function() {
+      const b = document.getElementById('copyBtn');
+      b.textContent = 'Copié !';
+      setTimeout(function() { b.textContent = 'Copier mon code'; }, 2000);
     });
+  });
 
-    document.getElementById('doneBtn').addEventListener('click', () => overlay.classList.remove('active'));
-    document.getElementById('unsubscribeLink').addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.href = window.location.origin + '/?unsubscribe=1';
-    });
-  </script>
+  document.getElementById('doneBtn').addEventListener('click', function() { overlay.classList.remove('active'); });
+  document.getElementById('unsubscribeLink').addEventListener('click', function() {
+    window.location.href = window.location.origin + '/?unsubscribe=1';
+  });
+</script>
 </body>
 </html>
