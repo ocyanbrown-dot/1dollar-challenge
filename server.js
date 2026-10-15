@@ -50,9 +50,9 @@ async function createCheckoutSession(email, code) {
     mode: 'payment',
     'line_items[0][price_data][currency]': 'usd',
     'line_items[0][price_data][unit_amount]': '100',
-    'line_items[0][price_data][product_data][name]': 'Le DÃ©fi du 1 $',
+    'line_items[0][price_data][product_data][name]': 'Le D????fi du 1 $',
     'line_items[0][quantity]': '1',
-    success_url: BASE_URL + '/?paid=1&code=' + code,
+    success_url: BASE_URL + '/?paid=1&code=' + code + '&session_id=' + params.id,
     cancel_url: BASE_URL + '/?cancelled=1',
     'metadata[code]': code,
     'metadata[type]': '1dollar-challenge'
@@ -144,6 +144,48 @@ const server = http.createServer((req, res) => {
     });
     return;
   }
+  if (pathname === '/api/reconcile' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', async () => {
+      try {
+        const { session_id } = JSON.parse(body);
+        const result = await stripeRequest('GET', '/v1/checkout/sessions/' + session_id);
+        if (result.status === 200 && result.data && result.data.payment_status === 'paid') {
+          const obj = result.data;
+          const email = (obj.customer_details && obj.customer_details.email) || obj.customer_email || '';
+          const code = obj.metadata && obj.metadata.code;
+          if (code) {
+            const d = loadData();
+            const already = d.participants.find(p => p.code === code);
+            if (!already) {
+              const participant = { email: email.toLowerCase(), code: code, joinedAt: new Date().toISOString(), referrer: null, status: 'paid', stripe_session: obj.id };
+              d.participants.push(participant);
+              d.codes[code] = { email: participant.email, createdAt: participant.joinedAt, shares: 0, maxShares: 3 };
+              d.totalDollar += 1;
+              d.totalParticipants += 1;
+              saveData(d);
+              console.log('Reconciled participant: ' + email + ' code ' + code);
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: true, reconciled: true, totalDollar: d.totalDollar }));
+              return;
+            } else {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: true, reconciled: false, reason: 'already', totalDollar: d.totalDollar }));
+              return;
+            }
+          }
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, reconciled: false, reason: 'not-paid-or-no-code', totalDollar: loadData().totalDollar }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
 
   if (pathname.startsWith('/api/code/')) {
     const code = decodeURIComponent(pathname.split('/').pop());

@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Le Défi du 1 $</title>
+  <title>Le D?fi du 1 $</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -247,12 +247,12 @@
 </head>
 <body>
   <div class="paid-banner" id="paidBanner">
-    Paiement confirmé ! Tu es dans le Défi.
+    Paiement confirm? ! Tu es dans le D?fi.
   </div>
 
   <div class="container">
     <div class="logo">1$</div>
-    <div class="subtitle">Test public de génération de revenus avec l'IA</div>
+    <div class="subtitle">Test public de g?n?ration de revenus avec l'IA</div>
 
     <div class="counters">
       <div class="counter-card">
@@ -274,11 +274,11 @@
     </div>
 
     <div class="rules">
-      <h3>Les règles</h3>
+      <h3>Les r?gles</h3>
       <ol>
         <li>Envoie 1 $</li>
-        <li>Reçois un code unique</li>
-        <li>Partage-le à 3 personnes si tu veux</li>
+        <li>Re?ois un code unique</li>
+        <li>Partage-le ? 3 personnes si tu veux</li>
         <li>Regarde le compteur public en direct</li>
       </ol>
     </div>
@@ -286,13 +286,13 @@
     <button class="cta" id="joinBtn">Rejoindre pour 1 $</button>
 
     <div class="disclaimer">
-      Ton adresse a été trouvée dans des sources publiques.<br>
-      Si tu ne veux rien en entendre : <a href="#" id="unsubscribeLink">désinscription</a><br>
+      Ton adresse a ?t? trouv?e dans des sources publiques.<br>
+      Si tu ne veux rien en entendre : <a href="#" id="unsubscribeLink">d?sinscription</a><br>
       Pas d'abonnement. Pas de spam. Pas d'arnaque.<br>
       Questions ? <a href="mailto:contact@1dollar-challenge.com">contact@1dollar-challenge.com</a>
     </div>
     <div class="domain-note">
-      Domaine acheté pour l'occasion. Boîte email créée pour ce test.
+      Domaine achet? pour l'occasion. Bo?te email cr??e pour ce test.
     </div>
   </div>
 
@@ -300,17 +300,17 @@
     <div class="modal">
       <button class="close-modal" id="closeModal">&times;</button>
       <div id="joinForm">
-        <h2>Rejoindre le Défi</h2>
-        <p>Envoie 1 $ pour recevoir ton code unique. Tu pourras le partager à 3 personnes.</p>
+        <h2>Rejoindre le D?fi</h2>
+        <p>Envoie 1 $ pour recevoir ton code unique. Tu pourras le partager ? 3 personnes.</p>
         <input type="email" id="emailInput" placeholder="ton@email.com">
         <button class="btn-primary" id="payBtn">Envoyer 1 $</button>
         <button class="btn-secondary" id="cancelBtn">Annuler</button>
       </div>
       <div class="success-box" id="successBox">
-        <h2>Tu es dans le Défi !</h2>
+        <h2>Tu es dans le D?fi !</h2>
         <div class="code-display" id="codeDisplay">1D-XXXX-XXXX</div>
         <div class="share-hint">
-          Partage ce code à 3 personnes.<br>
+          Partage ce code ? 3 personnes.<br>
           Chaque partage fait monter le compteur.
         </div>
         <button class="btn-primary" id="copyBtn" style="margin-top:20px">Copier mon code</button>
@@ -332,6 +332,15 @@
         document.getElementById('joinForm').style.display = 'none';
         document.getElementById('successBox').classList.add('active');
         document.getElementById('modalOverlay').classList.add('active');
+      }
+      const session_id_param = params.get('session_id');
+      // Reconcile with server (in case webhook missed the payment)
+      if (session_id_param) {
+        fetch(API + '/api/reconcile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: session_id_param })
+        }).catch(() => {});
       }
       history.replaceState({}, '', window.location.pathname);
     }
@@ -382,7 +391,7 @@
         if (d.ok && d.url) {
           window.location.href = d.url;
         } else {
-          alert(d.error || 'Erreur lors de la création du paiement');
+          alert(d.error || 'Erreur lors de la cr?ation du paiement');
           btn.textContent = 'Envoyer 1 $';
           btn.disabled = false;
         }
@@ -396,7 +405,7 @@
     document.getElementById('copyBtn').addEventListener('click', () => {
       const code = document.getElementById('codeDisplay').textContent;
       navigator.clipboard.writeText(code).then(() => {
-        document.getElementById('copyBtn').textContent = 'Copié !';
+        document.getElementById('copyBtn').textContent = 'Copi? !';
         setTimeout(() => document.getElementById('copyBtn').textContent = 'Copier mon code', 2000);
       });
     });
