@@ -7,581 +7,521 @@
   <meta name="description" content="Un test public : envoyeriez-vous 1 $ à un inconnu ? Regardez le compteur en direct.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #16130E;
-      --ink-soft: #57503F;
-      --ink-faint: #8A8272;
-      --paper: #FAF6EE;
-      --paper-deep: #F2ECDF;
-      --line: #E3DBCA;
-      --accent: #D95B29;
-      --accent-ink: #FFFFFF;
-      --ok: #3E7A4E;
+      --bg: #F7F4EF;
+      --surface: #EFEAE0;
+      --surface-raised: #FBF9F5;
+      --ink: #1C1914;
+      --ink-secondary: #524C42;
+      --ink-tertiary: #8A8275;
+      --line: #E4DDD0;
+      --line-strong: #CFC6B4;
+      --accent: #C4501B;
+      --accent-soft: #E8B49A;
+      --accent-tint: #F3E2D8;
+      --ok: #33684A;
+      --ok-tint: #DCE8DF;
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+      --dur-fast: 180ms;
+      --dur-med: 300ms;
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      --fs-display: clamp(44px, 9vw, 88px);
+      --fs-h2: clamp(30px, 5vw, 44px);
+      --fs-h3: 20px;
+      --fs-body: 17px;
+      --fs-small: 14px;
+      --fs-tiny: 12.5px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--paper);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.6;
+      background: var(--bg);
       color: var(--ink);
-      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
-    ::selection { background: var(--accent); color: #fff; }
-
-    /* ---------- paid banner ---------- */
-    .paid-banner {
-      display: none;
-      background: var(--accent);
-      color: var(--accent-ink);
-      padding: 14px 20px;
-      text-align: center;
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: 0.01em;
-    }
-    .paid-banner.active { display: block; }
-
-    /* ---------- layout ---------- */
-    .frame {
-      max-width: 880px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* ---------- header ---------- */
-    header.site {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 28px 0;
+    ::selection { background: var(--accent); color: #FDFBF8; }
+    a { color: inherit; }
+    button { font-family: inherit; }
+    .frame { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+    .site-header {
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 34px 0 28px; border-bottom: 1px solid var(--line);
     }
     .wordmark {
-      font-family: "Fraunces", serif;
-      font-weight: 600;
-      font-size: 18px;
-      letter-spacing: -0.01em;
+      font-family: var(--font-display); font-weight: 500; font-size: 21px; letter-spacing: -0.01em;
     }
-    .wordmark span { color: var(--accent); }
-    .live-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 7px 14px;
-      background: #fff;
+    .wordmark .dollar { font-style: italic; color: var(--accent); }
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: var(--fs-tiny); font-weight: 600; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--ink-secondary);
     }
     .live-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: pulse 1.8s ease-in-out infinite;
+      width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+      animation: breathe 2.4s var(--ease-in-out) infinite;
     }
-    @keyframes pulse {
+    @keyframes breathe {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.35; transform: scale(0.75); }
+      50% { opacity: 0.35; transform: scale(0.82); }
     }
-
-    /* ---------- hero ---------- */
-    .hero {
-      padding: 56px 0 48px;
+    .hero { padding: 84px 0 72px; position: relative; }
+    .hero-kicker {
+      font-size: var(--fs-tiny); font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 26px;
+      opacity: 0; animation: rise 600ms var(--ease-out) 100ms forwards;
     }
-    .kicker {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 20px;
-      opacity: 0;
-      transform: translateY(14px);
-      animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards;
+    .hero h1 {
+      font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display);
+      line-height: 1.04; letter-spacing: -0.025em; max-width: 15ch;
+      opacity: 0; animation: rise 700ms var(--ease-out) 200ms forwards;
     }
-    h1 {
-      font-family: "Fraunces", serif;
-      font-weight: 500;
-      font-size: clamp(40px, 8vw, 72px);
-      line-height: 1.02;
-      letter-spacing: -0.025em;
-      max-width: 14ch;
-      margin-bottom: 24px;
-      opacity: 0;
-      transform: translateY(18px);
-      animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
-    }
-    h1 em {
-      font-style: italic;
-      color: var(--accent);
-    }
-    .lede {
-      font-size: 17px;
-      line-height: 1.65;
-      color: var(--ink-soft);
-      max-width: 52ch;
-      margin-bottom: 36px;
-      opacity: 0;
-      transform: translateY(18px);
-      animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
-    }
-    @keyframes rise {
-      to { opacity: 1; transform: translateY(0); }
+    .hero h1 em { font-style: italic; font-weight: 500; color: var(--accent); }
+    .hero-deck {
+      margin-top: 30px; max-width: 54ch; font-size: 19px; line-height: 1.62;
+      color: var(--ink-secondary); opacity: 0; animation: rise 700ms var(--ease-out) 340ms forwards;
     }
     .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      opacity: 0;
-      transform: translateY(18px);
-      animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+      margin-top: 40px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+      opacity: 0; animation: rise 700ms var(--ease-out) 460ms forwards;
     }
-    .cta {
-      display: inline-block;
-      padding: 17px 34px;
-      background: var(--ink);
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: background 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s;
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .cta:hover {
-      background: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(217, 91, 41, 0.28);
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 17px 34px; background: var(--ink); color: #F7F3EC;
+      font-size: 16px; font-weight: 600; border: none; border-radius: 10px; cursor: pointer;
+      transition: transform var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
     }
-    .cta:active { transform: translateY(0); }
-    .ghost-link {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--ink-soft);
-      text-decoration: none;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 2px;
-      transition: color 0.2s, border-color 0.2s;
+    .btn-primary:hover { background: #2E2921; }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-primary:disabled { opacity: 0.55; cursor: wait; }
+    .btn-primary .arrow { transition: transform var(--dur-fast) var(--ease-out); }
+    @media (hover: hover) and (pointer: fine) {
+      .btn-primary:hover .arrow { transform: translateX(3px); }
     }
-    .ghost-link:hover { color: var(--ink); border-color: var(--ink); }
-
-    /* ---------- stats ---------- */
-    .stats-section {
-      padding: 8px 0 56px;
+    .btn-ghost {
+      display: inline-flex; align-items: center; padding: 15px 4px; background: none; border: none;
+      font-size: 15px; font-weight: 500; color: var(--ink-secondary); cursor: pointer;
+      border-bottom: 1px solid var(--line-strong);
+      transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
     }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border-top: 1px solid var(--line);
+    .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
+    .btn-ghost:active { transform: scale(0.98); }
+    .ledger { border-top: 1px solid var(--ink); padding: 44px 0 8px; }
+    .ledger-head {
+      display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 34px;
     }
-    .stat {
-      padding: 28px 8px 8px 0;
+    .ledger-title {
+      font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 22px; color: var(--ink);
     }
-    .stat-value {
-      font-family: "Fraunces", serif;
-      font-weight: 500;
-      font-size: clamp(32px, 5vw, 52px);
-      letter-spacing: -0.02em;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
+    .ledger-note { font-size: var(--fs-tiny); color: var(--ink-tertiary); letter-spacing: 0.04em; }
+    .ledger-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px 28px; }
+    .ledger-item { border-left: 1px solid var(--line-strong); padding-left: 20px; }
+    .ledger-item .value {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(38px, 5.4vw, 58px); line-height: 1; letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums; display: inline-block;
     }
-    .stat-label {
-      margin-top: 10px;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--ink-faint);
+    .ledger-item .value.bump { animation: bump 500ms var(--ease-out); }
+    @keyframes bump {
+      0% { transform: translateY(-7px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
     }
-
-    /* ---------- how it works ---------- */
-    .how {
-      background: var(--paper-deep);
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      padding: 72px 0;
+    .ledger-item .label {
+      margin-top: 10px; font-size: var(--fs-small); color: var(--ink-tertiary);
+      letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500;
     }
-    .how h2 {
-      font-family: "Fraunces", serif;
-      font-weight: 500;
-      font-size: clamp(28px, 4.5vw, 40px);
-      letter-spacing: -0.02em;
-      margin-bottom: 48px;
-      max-width: 24ch;
-      line-height: 1.15;
+    .ledger-item .sub { margin-top: 4px; font-size: var(--fs-tiny); color: var(--ink-tertiary); opacity: 0.75; }
+    .section { padding: 88px 0; }
+    .section-alt { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .section-kicker {
+      font-size: var(--fs-tiny); font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 18px;
     }
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 32px;
+    .section-title {
+      font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2);
+      line-height: 1.12; letter-spacing: -0.02em; max-width: 22ch;
     }
+    .section-title em { font-style: italic; }
+    .steps { margin-top: 64px; list-style: none; }
     .step {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      display: grid; grid-template-columns: 96px 1fr; gap: 32px; padding: 36px 0;
+      border-top: 1px solid var(--line);
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 550ms var(--ease-out), transform 550ms var(--ease-out);
     }
     .step.in { opacity: 1; transform: translateY(0); }
+    .step:last-child { border-bottom: 1px solid var(--line); }
     .step-num {
-      font-family: "Fraunces", serif;
-      font-style: italic;
-      font-size: 15px;
-      color: var(--accent);
-      margin-bottom: 14px;
+      font-family: var(--font-display); font-style: italic; font-weight: 300;
+      font-size: 40px; line-height: 1; color: var(--accent);
     }
     .step h3 {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
+      font-family: var(--font-display); font-weight: 500; font-size: var(--fs-h3);
+      letter-spacing: -0.01em; margin-bottom: 8px;
     }
-    .step p {
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--ink-soft);
+    .step p { font-size: 15.5px; line-height: 1.65; color: var(--ink-secondary); max-width: 56ch; }
+    .story { padding: 96px 0; }
+    .pull-quote {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(26px, 4.2vw, 40px); line-height: 1.28; letter-spacing: -0.015em;
+      max-width: 32ch; position: relative; padding-left: 40px;
     }
-
-    /* ---------- story ---------- */
-    .story {
-      padding: 80px 0;
+    .pull-quote::before {
+      content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 2px; background: var(--accent);
     }
-    .story blockquote {
-      font-family: "Fraunces", serif;
-      font-weight: 500;
-      font-size: clamp(22px, 3.5vw, 32px);
-      line-height: 1.35;
-      letter-spacing: -0.015em;
-      max-width: 30ch;
-      border-left: 2px solid var(--accent);
-      padding-left: 28px;
+    .pull-quote em { font-style: italic; }
+    .pull-byline { margin-top: 26px; margin-left: 40px; font-size: var(--fs-small); color: var(--ink-tertiary); letter-spacing: 0.04em; }
+    .faq { padding: 88px 0; }
+    .faq-list { margin-top: 56px; max-width: 720px; list-style: none; }
+    .faq-item { border-top: 1px solid var(--line); }
+    .faq-item:last-child { border-bottom: 1px solid var(--line); }
+    .faq-q {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      padding: 24px 0; background: none; border: none; text-align: left;
+      font-family: var(--font-body); font-size: 17px; font-weight: 600; color: var(--ink); cursor: pointer;
     }
-    .story .byline {
-      margin-top: 24px;
-      margin-left: 30px;
-      font-size: 14px;
-      color: var(--ink-faint);
+    .faq-q .chev { flex-shrink: 0; width: 22px; height: 22px; position: relative; transition: transform var(--dur-med) var(--ease-out); }
+    .faq-q .chev::before, .faq-q .chev::after {
+      content: ""; position: absolute; top: 50%; left: 50%; background: var(--ink-secondary);
     }
-
-    /* ---------- footer ---------- */
-    footer.site {
-      border-top: 1px solid var(--line);
-      padding: 40px 0 56px;
+    .faq-q .chev::before { width: 14px; height: 1.5px; transform: translate(-50%, -50%); }
+    .faq-q .chev::after {
+      width: 1.5px; height: 14px; transform: translate(-50%, -50%);
+      transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-med) var(--ease-out);
     }
-    .disclaimer {
-      font-size: 13px;
-      color: var(--ink-faint);
-      line-height: 1.8;
-      max-width: 60ch;
+    .faq-item.open .chev { transform: rotate(180deg); }
+    .faq-item.open .chev::after { opacity: 0; transform: translate(-50%, -50%) scaleY(0); }
+    .faq-a { overflow: hidden; max-height: 0; transition: max-height var(--dur-med) var(--ease-out); }
+    .faq-a-inner {
+      padding: 0 0 26px; font-size: 15.5px; line-height: 1.7; color: var(--ink-secondary); max-width: 60ch;
     }
+    .final-cta { background: var(--ink); color: #F3EFE6; padding: 80px 0; }
+    .final-cta-inner {
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; flex-wrap: wrap;
+    }
+    .final-cta h2 {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(30px, 4.6vw, 46px); line-height: 1.1; letter-spacing: -0.02em; max-width: 18ch;
+    }
+    .final-cta h2 em { font-style: italic; color: var(--accent-soft); }
+    .final-cta .btn-primary { background: #F3EFE6; color: var(--ink); padding: 19px 40px; }
+    .final-cta .btn-primary:hover { background: #FFFDF9; }
+    .site-footer { padding: 56px 0 64px; }
+    .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; }
+    .disclaimer { font-size: var(--fs-small); line-height: 1.75; color: var(--ink-tertiary); max-width: 52ch; }
     .disclaimer a {
-      color: var(--ink-soft);
-      text-decoration: none;
-      border-bottom: 1px solid var(--line);
-      transition: color 0.2s;
+      color: var(--ink-secondary); text-decoration: none; border-bottom: 1px solid var(--line-strong);
+      transition: color var(--dur-fast) var(--ease-out);
     }
     .disclaimer a:hover { color: var(--accent); }
-    .domain-note {
-      margin-top: 14px;
-      font-size: 12px;
-      color: var(--ink-faint);
-      opacity: 0.8;
+    .domain-note { margin-top: 18px; font-size: var(--fs-tiny); color: var(--ink-tertiary); opacity: 0.8; }
+    .footer-right { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+    .footer-right .contact-line { font-size: var(--fs-small); color: var(--ink-secondary); }
+    .footer-right .contact-line a { color: var(--ink); font-weight: 600; text-decoration: none; }
+    .footer-right .contact-line a:hover { color: var(--accent); }
+    .btn-unsub {
+      margin-top: 6px; display: inline-flex; align-items: center; padding: 11px 20px; background: none;
+      border: 1px solid var(--line-strong); border-radius: 999px;
+      font-size: var(--fs-tiny); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--ink-secondary); cursor: pointer;
+      transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
     }
-    .unsubscribe-tag {
-      display: inline-block;
-      margin-top: 20px;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 8px 16px;
-      cursor: pointer;
-      background: none;
-      transition: border-color 0.2s, color 0.2s;
+    .btn-unsub:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-unsub:active { transform: scale(0.97); }
+    .paid-banner {
+      display: none; background: var(--ok); color: #EDF4EF; padding: 14px 24px;
+      text-align: center; font-size: 15px; font-weight: 500;
     }
-    .unsubscribe-tag:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* ---------- modal ---------- */
+    .paid-banner.active { display: block; animation: dropIn 400ms var(--ease-out); }
+    @keyframes dropIn {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
     .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(22, 19, 14, 0.55);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(28, 25, 20, 0.55);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+      align-items: center; justify-content: center; padding: 24px;
     }
     .modal-overlay.active { display: flex; }
     .modal {
-      background: var(--paper);
-      border-radius: 20px;
-      padding: 40px 36px 36px;
-      max-width: 420px;
-      width: 100%;
-      position: relative;
-      box-shadow: 0 30px 80px rgba(22, 19, 14, 0.35);
-      animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      width: 100%; max-width: 440px; background: var(--surface-raised);
+      border: 1px solid var(--line); border-radius: 16px; padding: 38px 36px 34px;
+      position: relative; box-shadow: 0 24px 64px rgba(28, 25, 20, 0.28);
+      opacity: 0; transform: translateY(12px) scale(0.98);
+      transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
     }
-    @keyframes modalIn {
-      from { opacity: 0; transform: translateY(16px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
+    .modal-overlay.active .modal { opacity: 1; transform: translateY(0) scale(1); }
     .modal h2 {
-      font-family: "Fraunces", serif;
-      font-weight: 500;
-      font-size: 26px;
-      letter-spacing: -0.015em;
-      margin-bottom: 12px;
+      font-family: var(--font-display); font-weight: 500; font-size: 27px;
+      letter-spacing: -0.015em; margin-bottom: 10px;
     }
-    .modal p {
-      font-size: 14.5px;
-      color: var(--ink-soft);
-      line-height: 1.6;
-      margin-bottom: 24px;
+    .modal p { font-size: 15px; line-height: 1.65; color: var(--ink-secondary); margin-bottom: 22px; }
+    .modal input[type="email"] {
+      width: 100%; padding: 15px 16px; font-family: var(--font-body); font-size: 16px;
+      color: var(--ink); background: #FFFFFF; border: 1px solid var(--line-strong);
+      border-radius: 10px; margin-bottom: 14px;
+      transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
     }
-    .modal input {
-      width: 100%;
-      padding: 15px 16px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      color: var(--ink);
-      font-size: 16px;
-      font-family: inherit;
-      margin-bottom: 14px;
-      transition: border-color 0.2s;
+    .modal input[type="email"]::placeholder { color: var(--ink-tertiary); }
+    .modal input[type="email"]:focus {
+      outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint);
     }
-    .modal input:focus {
-      outline: none;
-      border-color: var(--accent);
+    .modal input[type="email"].error { border-color: #B3402A; box-shadow: 0 0 0 3px #F0DAD2; }
+    .btn-block { width: 100%; }
+    .btn-quiet {
+      width: 100%; padding: 13px; background: none; border: 1px solid var(--line-strong);
+      border-radius: 10px; font-size: 14.5px; font-weight: 500; color: var(--ink-secondary);
+      cursor: pointer; margin-top: 10px;
+      transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
     }
-    .btn-primary {
-      width: 100%;
-      padding: 15px;
-      background: var(--ink);
-      color: #fff;
-      font-size: 15.5px;
-      font-weight: 600;
-      font-family: inherit;
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: background 0.25s, transform 0.25s;
+    .btn-quiet:hover { color: var(--ink); border-color: var(--ink-tertiary); }
+    .btn-quiet:active { transform: scale(0.98); }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px; width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; border-radius: 8px;
+      font-size: 22px; line-height: 1; color: var(--ink-tertiary); cursor: pointer;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
     }
-    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
-    .btn-primary:disabled { opacity: 0.6; cursor: default; transform: none; }
-    .btn-secondary {
-      width: 100%;
-      padding: 13px;
-      background: transparent;
-      color: var(--ink-faint);
-      font-size: 14px;
-      font-weight: 500;
-      font-family: inherit;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .btn-secondary:hover { color: var(--ink); border-color: var(--ink-faint); }
-    .close-modal {
-      position: absolute;
-      top: 18px; right: 18px;
-      background: none;
-      border: none;
-      color: var(--ink-faint);
-      font-size: 26px;
-      cursor: pointer;
-      line-height: 1;
-      padding: 4px;
-    }
-    .close-modal:hover { color: var(--ink); }
+    .modal-close:hover { background: var(--surface); color: var(--ink); }
     .success-box { display: none; text-align: center; }
     .success-box.active { display: block; }
-    .success-box h2 { margin-bottom: 20px; }
-    .code-display {
-      font-family: "Fraunces", serif;
-      font-size: 30px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: var(--ink);
-      background: #fff;
-      border: 1.5px dashed var(--accent);
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 16px;
-      font-variant-numeric: tabular-nums;
+    .success-mark {
+      width: 56px; height: 56px; margin: 4px auto 20px; border-radius: 50%;
+      background: var(--ok-tint); color: var(--ok);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 600;
+      transform: scale(0.6); opacity: 0;
+      animation: popIn 450ms var(--ease-out) 150ms forwards;
     }
-    .share-hint {
-      font-size: 14px;
-      color: var(--ink-soft);
-      line-height: 1.65;
+    @keyframes popIn { to { transform: scale(1); opacity: 1; } }
+    .code-chip {
+      margin: 22px 0 14px; padding: 18px 24px; background: #FFFFFF;
+      border: 1.5px dashed var(--accent); border-radius: 12px;
+      font-family: var(--font-display); font-weight: 500; font-size: 28px;
+      letter-spacing: 0.1em; font-variant-numeric: tabular-nums; color: var(--ink); user-select: all;
     }
+    .share-hint { font-size: 14.5px; line-height: 1.65; color: var(--ink-secondary); }
     .success-box .btn-primary { margin-top: 24px; }
-    .success-check {
-      width: 52px; height: 52px;
-      margin: 0 auto 20px;
-      border-radius: 50%;
-      background: var(--ok);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
+    @media (max-width: 860px) {
+      .ledger-grid { grid-template-columns: repeat(2, 1fr); gap: 32px 20px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+      .section, .story, .faq { padding: 64px 0; }
+      .hero { padding: 56px 0 48px; }
     }
-
-    /* ---------- responsive ---------- */
-    @media (max-width: 720px) {
-      .hero { padding: 36px 0 36px; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px 0; }
-      .steps { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
-      .how { padding: 56px 0; }
-      .story { padding: 56px 0; }
-    }
-    @media (max-width: 440px) {
-      .steps { grid-template-columns: 1fr; }
-      .hero-actions { flex-direction: column; align-items: stretch; }
-      .cta { text-align: center; }
-      .ghost-link { text-align: center; }
+    @media (max-width: 560px) {
+      .step { grid-template-columns: 1fr; gap: 10px; padding: 28px 0; }
+      .step-num { font-size: 32px; }
+      .hero-actions .btn-ghost { padding: 12px 0; }
+      .final-cta-inner { flex-direction: column; align-items: flex-start; }
+      .modal { padding: 32px 24px 28px; }
     }
     @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
-      .kicker, h1, .lede, .hero-actions { opacity: 1; transform: none; }
-      .step { opacity: 1; transform: none; }
+      .hero-kicker, .hero h1, .hero-deck, .hero-actions, .step, .modal, .success-mark {
+        opacity: 1 !important; transform: none !important;
+      }
+      .live-dot { animation: none; }
     }
+
   </style>
 </head>
 <body>
-  <div class="paid-banner" id="paidBanner">
-    Paiement confirmé. Tu es dans le Défi.
-  </div>
+  <div class="paid-banner" id="paidBanner">Paiement confirmé — vous êtes dans le Défi.</div>
 
   <div class="frame">
-    <header class="site">
-      <div class="wordmark">1<span>$</span> — le défi</div>
-      <div class="live-pill"><span class="live-dot"></span>En direct</div>
+    <header class="site-header">
+      <div class="wordmark">Le Défi du 1<span class="dollar">$</span></div>
+      <div class="live-badge"><span class="live-dot"></span>Compteur en direct</div>
     </header>
 
     <section class="hero">
-      <div class="kicker">Expérience publique · Propulsée par l'IA</div>
-      <h1>Enverriez-vous <em>1&nbsp;$</em> à un inconnu&nbsp;?</h1>
-      <p class="lede">
-        J'ai demandé à une IA de trouver la manière la plus simple de générer des revenus en ligne.
-        Sa réponse : ce site, ce test, ce compteur. Rien ne vous force à envoyer quoi que ce soit.
-        Envoyez 1&nbsp;$, ou bien ne l'envoyez pas. Les deux comptent.
+      <div class="hero-kicker">Une expérience publique · Lancée avec l'aide de l'IA</div>
+      <h1>Enverriez-vous un dollar à <em>un inconnu&nbsp;?</em></h1>
+      <p class="hero-deck">
+        J'essaie de trouver des façons créatives de générer de l'argent avec l'intelligence artificielle.
+        L'expérience la plus simple possible&nbsp;: vous envoyez 1&nbsp;$, vous recevez un code,
+        et tout le monde regarde le compteur monter. Rien ne vous y oblige — pas envoyer est aussi une réponse.
       </p>
       <div class="hero-actions">
-        <button class="cta" id="joinBtn">Rejoindre pour 1 $</button>
-        <a class="ghost-link" href="#regles">Comment ça marche ↓</a>
+        <button class="btn-primary" id="joinBtn">Rejoindre pour 1&nbsp;$ <span class="arrow">→</span></button>
+        <a class="btn-ghost" href="#regles">Comment ça marche</a>
       </div>
     </section>
 
-    <section class="stats-section" aria-label="Statistiques en direct">
-      <div class="stats-grid">
-        <div class="stat">
-          <div class="stat-value" id="totalDollar">$0</div>
-          <div class="stat-label">Dans la cagnotte</div>
+    <section class="ledger" aria-label="Compteur en direct">
+      <div class="ledger-head">
+        <span class="ledger-title">Là où en est l'expérience</span>
+        <span class="ledger-note">Mis à jour en continu</span>
+      </div>
+      <div class="ledger-grid">
+        <div class="ledger-item">
+          <span class="value" id="totalDollar">$0</span>
+          <div class="label">Dans la cagnotte</div>
+          <div class="sub">Chaque dollar compte</div>
         </div>
-        <div class="stat">
-          <div class="stat-value" id="totalParticipants">0</div>
-          <div class="stat-label">Participants</div>
+        <div class="ledger-item">
+          <span class="value" id="totalParticipants">0</span>
+          <div class="label">Participants</div>
+          <div class="sub">Des inconnus, comme vous</div>
         </div>
-        <div class="stat">
-          <div class="stat-value" id="activeCodes">0</div>
-          <div class="stat-label">Codes actifs</div>
+        <div class="ledger-item">
+          <span class="value" id="activeCodes">0</span>
+          <div class="label">Codes distribués</div>
+          <div class="sub">Un code par participant</div>
         </div>
-        <div class="stat">
-          <div class="stat-value" id="totalShares">0</div>
-          <div class="stat-label">Partages</div>
+        <div class="ledger-item">
+          <span class="value" id="totalShares">0</span>
+          <div class="label">Partages</div>
+          <div class="sub">Codes envoyés à d'autres</div>
         </div>
       </div>
     </section>
   </div>
 
-  <section class="how" id="regles">
+  <section class="section section-alt" id="regles">
     <div class="frame">
-      <h2>Un jeu en quatre temps. Rien de plus.</h2>
-      <div class="steps">
-        <div class="step">
+      <div class="section-kicker">Les règles</div>
+      <h2 class="section-title">Quatre temps, <em>rien de plus.</em></h2>
+      <ol class="steps">
+        <li class="step">
           <div class="step-num">01</div>
-          <h3>Vous envoyez 1 $</h3>
-          <p>Un dollar. Pas deux, pas trois. Un paiement simple via Stripe, le service qui traite des millions de transactions par jour.</p>
-        </div>
-        <div class="step">
+          <div>
+            <h3>Vous envoyez 1 $</h3>
+            <p>Exactement un dollar, ni plus ni moins. Le paiement passe par Stripe, le même service qui traite vos achats en ligne habituels. Aucune carte à donner, juste une confirmation.</p>
+          </div>
+        </li>
+        <li class="step">
           <div class="step-num">02</div>
-          <h3>Vous recevez un code</h3>
-          <p>Un code unique, juste à vous. C'est votre preuve que vous avez joué le jeu.</p>
-        </div>
-        <div class="step">
+          <div>
+            <h3>Vous recevez un code unique</h3>
+            <p>Un code, rien qu'à vous, généré à l'instant. C'est votre preuve que vous avez joué le jeu — et le seul souvenir que vous gardez de l'expérience.</p>
+          </div>
+        </li>
+        <li class="step">
           <div class="step-num">03</div>
-          <h3>Vous le partagez… ou pas</h3>
-          <p>Partagez-le à trois personnes si l'envie vous prend. Aucun engagement, aucune suite.</p>
-        </div>
-        <div class="step">
+          <div>
+            <h3>Vous le partagez, si l'envie vous prend</h3>
+            <p>À trois personnes, à une, à personne. Votre réaction est la donnée de l'expérience : envoyer, partager, ignorer — tout est pris en note.</p>
+          </div>
+        </li>
+        <li class="step">
           <div class="step-num">04</div>
-          <h3>Vous regardez le compteur</h3>
-          <p>Il augmente en direct, pour tout le monde. C'est le seul objectif : voir jusqu'où un dollar peut aller.</p>
-        </div>
+          <div>
+            <h3>Vous regardez le compteur</h3>
+            <p>Le compteur public, tout en haut de cette page, monte en direct. L'objectif n'est pas de faire fortune — c'est de voir jusqu'où un dollar peut voyager.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="story">
+    <div class="frame">
+      <div class="section-kicker">Le pourquoi</div>
+      <blockquote class="pull-quote">
+        « Je cherche des moyens <em>créatifs</em> de générer de l'argent avec l'intelligence artificielle.
+        Alors autant que ce soit une expérience — et que tout le monde puisse s'inspirer de l'idée. »
+      </blockquote>
+      <div class="pull-byline">— L'entrepreneur derrière le défi</div>
+    </div>
+  </section>
+
+  <section class="faq section-alt">
+    <div class="frame">
+      <div class="section-kicker">Questions honnêtes</div>
+      <h2 class="section-title">Tout ce que vous allez <em>vous demander.</em></h2>
+      <ul class="faq-list">
+        <li class="faq-item">
+          <button class="faq-q">D'où vient mon adresse courriel ? <span class="chev"></span></button>
+          <div class="faq-a"><div class="faq-a-inner">De sources entièrement publiques — réseaux sociaux, annuaires, listes en libre accès. Aucune base privée, aucun traçage ciblée. Votre courriel n'a pas été « acheté » : il était visible, n'importe qui pouvait l'avoir.</div></div>
+        </li>
+        <li class="faq-item">
+          <button class="faq-q">Pourquoi un inconnu m'écrit pour me demander de l'argent ? <span class="chev"></span></button>
+          <div class="faq-a"><div class="faq-a-inner">Parce que c'est l'expérience. Je voulais savoir si, concrètement, des gens enverraient 1 $ à quelqu'un qu'ils ne connaissent pas quand on leur explique clairement pourquoi. Votre réaction fait partie du résultat : jouer, poser des questions, ou effacer le courriel.</div></div>
+        </li>
+        <li class="faq-item">
+          <button class="faq-q">Est-ce une arnaque ? <span class="chev"></span></button>
+          <div class="faq-a"><div class="faq-a-inner">Non. Le domaine a été acheté spécifiquement pour ce test, la boîte mail a été créée pour l'occasion, et le paiement est traité par Stripe (le même que Shopify et des milliers de boutiques). Pas d'abonnement, pas de re-prise, pas de données revendues.</div></div>
+        </li>
+        <li class="faq-item">
+          <button class="faq-q">Que se passe-t-il après que j'ai envoyé mon dollar ? <span class="chev"></span></button>
+          <div class="faq-a"><div class="faq-a-inner">Vous recevez votre code unique. C'est tout. Pas de suite, pas de newsletter surprise. Vous pouvez regarder le compteur, partager votre code, ou oublier que cette page existe.</div></div>
+        </li>
+        <li class="faq-item">
+          <button class="faq-q">Et si je ne veux rien entendre ? <span class="chev"></span></button>
+          <div class="faq-a"><div class="faq-a-inner">Mettez ce courriel à la poubelle, ou cliquez sur le bouton de désinscription. Vous n'en entendrez plus jamais parler. C'est le principe : rien ne vous force à jouer.</div></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="frame">
+      <div class="final-cta-inner">
+        <h2>Un dollar. Un code. <em>Une réponse.</em></h2>
+        <button class="btn-primary" id="joinBtn2">Rejoindre le Défi <span class="arrow">→</span></button>
       </div>
     </div>
   </section>
 
-  <div class="frame">
-    <section class="story">
-      <blockquote>
-        « Je cherche des moyens créatifs de générer de l'argent avec l'IA. Alors autant que ce soit une expérience amusante. »
-      </blockquote>
-      <div class="byline">— L'entrepreneur derrière ce défi</div>
-    </section>
-
-    <footer class="site">
-      <div class="disclaimer">
-        Votre adresse a été trouvée dans des sources publiques (réseaux sociaux, annuaires). Aucun traçage ciblée n'a été effectué.<br>
-        Pas d'abonnement. Pas de spam. Pas d'arnaque. Le paiement est traité par <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>.<br>
-        Questions&nbsp;? Écrivez-moi à <a href="mailto:contact@1dollar-challenge.com">contact@1dollar-challenge.com</a>.
+  <footer class="site-footer">
+    <div class="frame">
+      <div class="footer-grid">
+        <div>
+          <p class="disclaimer">
+            Votre adresse a été trouvée dans des sources publiques (réseaux sociaux, annuaires).
+            Aucun traçage ciblée n'a été effectué. Pas d'abonnement, pas de spam, pas d'arnaque.
+            Le paiement est traité de manière sécurisée par <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>.
+          </p>
+          <p class="domain-note">Domaine acheté et boîte mail créés spécifiquement pour ce test.</p>
+        </div>
+        <div class="footer-right">
+          <div class="contact-line">
+            Une question ? <a href="mailto:contact@1dollar-challenge.com">contact@1dollar-challenge.com</a>
+          </div>
+          <button class="btn-unsub" id="unsubscribeLink">Désinscription en un clic</button>
+        </div>
       </div>
-      <div class="domain-note">Domaine acheté et boîte mail créée spécifiquement pour ce test.</div>
-      <button class="unsubscribe-tag" id="unsubscribeLink">Ça suffit, désinscrivez-moi</button>
-    </footer>
-  </div>
+    </div>
+  </footer>
 </div>
 
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <button class="close-modal" id="closeModal" aria-label="Fermer">&times;</button>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="closeModal" aria-label="Fermer">×</button>
     <div id="joinForm">
-      <h2>Rejoindre le Défi</h2>
-      <p>Envoyez 1 $ pour recevoir votre code unique. Vous pourrez ensuite le partager à 3 personnes — ou pas.</p>
-      <input type="email" id="emailInput" placeholder="votre@email.com" autocomplete="email">
-      <button class="btn-primary" id="payBtn">Envoyer 1 $</button>
-      <button class="btn-secondary" id="cancelBtn">Non merci</button>
+      <h2 id="modalTitle">Rejoindre le Défi</h2>
+      <p>Envoyez 1 $ et recevez votre code unique. Vous pourrez ensuite le partager à 3 personnes — ou à personne. Aucune suite après ça.</p>
+      <input type="email" id="emailInput" placeholder="votre@email.com" autocomplete="email" aria-label="Votre adresse courriel">
+      <button class="btn-primary btn-block" id="payBtn">Envoyer 1 $</button>
+      <button class="btn-quiet" id="cancelBtn">Non merci</button>
     </div>
     <div class="success-box" id="successBox">
-      <div class="success-check">✓</div>
+      <div class="success-mark">✓</div>
       <h2>Vous êtes dans le Défi</h2>
-      <div class="code-display" id="codeDisplay">1D-XXXX-XXXX</div>
-      <div class="share-hint">
-        Partagez ce code à 3 personnes si vous voulez.<br>
-        Chaque partage fait monter le compteur.
-      </div>
-      <button class="btn-primary" id="copyBtn">Copier mon code</button>
-      <button class="btn-secondary" id="doneBtn">Fermer</button>
+      <p>Votre code unique :</p>
+      <div class="code-chip" id="codeDisplay">1D-XXXX-XXXX</div>
+      <div class="share-hint">Partagez-le à 3 personnes si vous voulez.<br>Chaque partage fait monter le compteur public.</div>
+      <button class="btn-primary btn-block" id="copyBtn">Copier mon code</button>
+      <button class="btn-quiet" id="doneBtn">C'est tout, merci</button>
     </div>
   </div>
 </div>
@@ -590,7 +530,7 @@
   const API = window.location.origin;
   const params = new URLSearchParams(window.location.search);
 
-  // Return from Stripe: show banner + code, reconcile payment with server.
+  // --- Return from Stripe: banner + code + reconcile ---
   if (params.get('paid') === '1') {
     document.getElementById('paidBanner').classList.add('active');
     const code = params.get('code');
@@ -611,57 +551,124 @@
     history.replaceState({}, '', window.location.pathname);
   }
 
+  // --- Live stats with bump animation on change ---
+  const statEls = {
+    totalDollar: document.getElementById('totalDollar'),
+    totalParticipants: document.getElementById('totalParticipants'),
+    activeCodes: document.getElementById('activeCodes'),
+    totalShares: document.getElementById('totalShares')
+  };
+  const prevStats = {};
+
+  function bump(el) {
+    el.classList.remove('bump');
+    void el.offsetWidth;
+    el.classList.add('bump');
+  }
+
   function updateStats() {
     fetch(API + '/api/stats')
       .then(function(r) { return r.json(); })
       .then(function(d) {
-        document.getElementById('totalDollar').textContent = '$' + d.totalDollar;
-        document.getElementById('totalParticipants').textContent = d.totalParticipants;
-        document.getElementById('activeCodes').textContent = d.activeCodes;
-        document.getElementById('totalShares').textContent = d.shares;
+        const map = {
+          totalDollar: '$' + d.totalDollar,
+          totalParticipants: String(d.totalParticipants),
+          activeCodes: String(d.activeCodes),
+          totalShares: String(d.shares)
+        };
+        for (const key in map) {
+          const el = statEls[key];
+          if (el.textContent !== map[key]) {
+            el.textContent = map[key];
+            if (prevStats[key] !== undefined) bump(el);
+          }
+          prevStats[key] = d[key];
+        }
       })
       .catch(function(){});
   }
-
   updateStats();
   setInterval(updateStats, 5000);
 
-  // Reveal steps on scroll
+  // --- Scroll-reveal for steps ---
   const stepEls = document.querySelectorAll('.step');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry, i) {
+      let revealed = 0;
+      entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           const el = entry.target;
-          const idx = Array.prototype.indexOf.call(stepEls, el);
-          setTimeout(function() { el.classList.add('in'); }, idx * 90);
+          setTimeout(function() { el.classList.add('in'); }, revealed * 90);
+          revealed++;
           io.unobserve(el);
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.25, rootMargin: '0px 0px -40px 0px' });
     stepEls.forEach(function(el) { io.observe(el); });
   } else {
     stepEls.forEach(function(el) { el.classList.add('in'); });
   }
 
+  // --- FAQ accordion ---
+  document.querySelectorAll('.faq-item').forEach(function(item) {
+    const q = item.querySelector('.faq-q');
+    const a = item.querySelector('.faq-a');
+    q.addEventListener('click', function() {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(other) {
+        if (other !== item) {
+          other.classList.remove('open');
+          other.querySelector('.faq-a').style.maxHeight = '0px';
+        }
+      });
+      if (isOpen) {
+        item.classList.remove('open');
+        a.style.maxHeight = '0px';
+      } else {
+        item.classList.add('open');
+        a.style.maxHeight = a.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // --- Modal ---
   const overlay = document.getElementById('modalOverlay');
-  document.getElementById('joinBtn').addEventListener('click', function() {
+  function openModal() {
     overlay.classList.add('active');
     document.getElementById('joinForm').style.display = 'block';
     document.getElementById('successBox').classList.remove('active');
+    setTimeout(function(){ document.getElementById('emailInput').focus(); }, 220);
+  }
+  function closeModal() {
+    overlay.classList.remove('active');
+    const email = document.getElementById('emailInput');
+    email.value = '';
+    email.classList.remove('error');
+  }
+  document.getElementById('joinBtn').addEventListener('click', openModal);
+  document.getElementById('joinBtn2').addEventListener('click', openModal);
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  document.getElementById('cancelBtn').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
   });
-  document.getElementById('closeModal').addEventListener('click', function() { overlay.classList.remove('active'); });
-  document.getElementById('cancelBtn').addEventListener('click', function() { overlay.classList.remove('active'); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
+  });
 
+  // --- Payment ---
   document.getElementById('payBtn').addEventListener('click', async function() {
-    const email = document.getElementById('emailInput').value.trim();
+    const emailEl = document.getElementById('emailInput');
+    const email = emailEl.value.trim();
     if (!email || email.indexOf('@') === -1) {
-      document.getElementById('emailInput').style.borderColor = '#D95B29';
+      emailEl.classList.add('error');
+      emailEl.focus();
       return;
     }
+    emailEl.classList.remove('error');
 
     const btn = document.getElementById('payBtn');
-    btn.textContent = 'Redirection...';
+    btn.textContent = 'Redirection vers le paiement…';
     btn.disabled = true;
 
     try {
@@ -674,7 +681,7 @@
       if (d.ok && d.url) {
         window.location.href = d.url;
       } else {
-        alert(d.error || 'Erreur lors de la création du paiement');
+        alert(d.error || 'Erreur lors de la création du paiement.');
         btn.textContent = 'Envoyer 1 $';
         btn.disabled = false;
       }
@@ -685,19 +692,24 @@
     }
   });
 
+  // --- Copy code ---
   document.getElementById('copyBtn').addEventListener('click', function() {
     const code = document.getElementById('codeDisplay').textContent;
+    const btn = document.getElementById('copyBtn');
     navigator.clipboard.writeText(code).then(function() {
-      const b = document.getElementById('copyBtn');
-      b.textContent = 'Copié !';
-      setTimeout(function() { b.textContent = 'Copier mon code'; }, 2000);
+      btn.textContent = 'Copié ✓';
+      setTimeout(function() { btn.textContent = 'Copier mon code'; }, 2000);
     });
   });
 
-  document.getElementById('doneBtn').addEventListener('click', function() { overlay.classList.remove('active'); });
+  document.getElementById('doneBtn').addEventListener('click', closeModal);
+
+  // --- Unsubscribe ---
   document.getElementById('unsubscribeLink').addEventListener('click', function() {
     window.location.href = window.location.origin + '/?unsubscribe=1';
   });
 </script>
+
 </body>
 </html>
+
