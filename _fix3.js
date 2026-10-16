@@ -1,0 +1,10 @@
+const fs=require('fs');
+const p='appweb/index.html';
+let h=fs.readFileSync(p,'utf8');
+const i=h.indexOf("const money=n=>");
+const end=h.indexOf(";$('totalRefunded')",i);
+const broken=h.slice(i,end+1);
+const fixed="const money=n=>Number(n||0).toLocaleString(L()==='en'?'en-CA':'fr-CA',{maximumFractionDigits:2})+' $';$('totalIn').textContent=money(d.totalIn)";
+h=h.slice(0,i)+fixed+h.slice(end+1);
+fs.writeFileSync(p,h);
+console.log('fixed line');
