@@ -6,12 +6,13 @@ const crypto = require('crypto');
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || '';
 const BASE_URL = 'https://1dollar-challenge.com';
-const DATA_FILE = path.join(__dirname, 'data', 'challenge.json');
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
+const DATA_FILE = path.join(DATA_DIR, 'challenge.json');
 const PORT = process.env.PORT || 8080;
 
 function loadData() {
   try { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8')); }
-  catch { return { participants: [], codes: {}, totalDollar: 0, totalParticipants: 0, totalShares: 0, totalRefunded: 0, startedAt: new Date().toISOString() }; }
+  catch { return { participants: [], codes: {}, totalDollar: 0, totalParticipants: 0, totalShares: 0, totalRefunded: 0, startedAt: new Date().toISOString(), reactions: {}, events: [] }; }
 }
 
 function saveData(d) { fs.writeFileSync(DATA_FILE, JSON.stringify(d, null, 2), 'utf-8'); }
@@ -287,6 +288,36 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (pathname === "/api/events" && req.method === "POST") {
+    let body = "";
+    req.on("data", chunk => body += chunk);
+    req.on("end", () => {
+      try {
+        const { type, meta } = JSON.parse(body);
+        const d = loadData();
+        if (!d.events) d.events = [];
+        d.events.push({ t: type, meta: meta || null, at: new Date().toISOString() });
+        if (d.events.length > 20000) d.events = d.events.slice(-15000);
+        if (!d.reactions) d.reactions = {};
+        if (["view","share_view","open","join_form","unsubscribe","declined"].includes(type)) d.reactions[type] = (d.reactions[type] || 0) + 1;
+        if (type === "ref" && meta && meta.code && meta.referrer) {
+          const entry = d.codes[meta.code];
+          if (entry) entry.referredBy = meta.referrer;
+        }
+        saveData(d);
+        res.writeHead(204);
+        res.end();
+      } catch (e) { res.writeHead(500); res.end(); }
+    });
+    return;
+  }
+
+  if (pathname === "/api/admin/reactions") {
+    const d = loadData();
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ reactions: d.reactions || {}, totalEvents: (d.events || []).length }));
+    return;
+  }
   const publicDir = path.join(__dirname, 'appweb');
   let filePath = pathname === '/' ? '/index.html' : pathname;
   const fullPath = path.join(publicDir, filePath);
@@ -299,8 +330,8 @@ const server = http.createServer((req, res) => {
   });
 });
 
-const dataDir = path.join(__dirname, 'data');
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
+const dataDir = DATA_DIR;
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
 server.listen(PORT, () => {
   console.log('Server: http://localhost:' + PORT);
