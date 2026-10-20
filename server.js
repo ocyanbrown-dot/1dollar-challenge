@@ -92,8 +92,16 @@ async function doRefund(code) {
 }
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost:' + PORT);
-  if (pathname === '/api/admin/reset' && process.env.ADMIN_KEY && process.env.ADMIN_KEY === '1d2026') { const d = loadData(); d.participants = []; d.codes = {}; d.totalDollar = 0; d.totalParticipants = 0; d.totalShares = 0; d.totalRefunded = 0; d.reactions = {}; d.events = []; saveData(d); res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, reset: true })); return; }
   const pathname = url.pathname;
+
+  if (pathname === '/api/admin/reset' && req.method === 'POST' && process.env.ADMIN_KEY && process.env.ADMIN_KEY === '1d2026') {
+    const d = loadData();
+    d.participants = []; d.codes = {}; d.totalDollar = 0; d.totalParticipants = 0; d.totalShares = 0; d.totalRefunded = 0; d.reactions = {}; d.events = [];
+    saveData(d);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, reset: true }));
+    return;
+  }
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
