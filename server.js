@@ -60,7 +60,7 @@ async function createCheckoutSession(email, code) {
   };
   if (email) params['customer_email'] = email;
   return stripeRequest('POST', '/v1/checkout/sessions', params);
-}
+
 }
 
 async function refundPayment(code, paymentIntent) {
