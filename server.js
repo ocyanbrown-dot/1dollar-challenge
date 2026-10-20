@@ -61,7 +61,7 @@ async function createCheckoutSession(email, code) {
   return stripeRequest('POST', '/v1/checkout/sessions', params);
 }
 
-}
+
 
 async function refundPayment(code, paymentIntent) {
   const ref = await stripeRequest('POST', '/v1/refunds', { payment_intent: paymentIntent });
