@@ -86,7 +86,7 @@ async function doRefund(code) {
     result = { refunded: true, message: 'Code complet.' };
   }
   entry.refunded = result.refunded;
-  d.totalRefunded = (d.totalRefunded || 0) + 1;
+  if (result.refunded) d.totalRefunded = (d.totalRefunded || 0) + 1;
   saveData(d);
   return { status: 200, body: { ok: true, refunded: result.refunded, refundMessage: result.message, shares: entry.shares, maxShares: entry.maxShares, complete: true } };
 }
