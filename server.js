@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || '';
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || ''
+const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || '';
 const BASE_URL = 'https://1dollar-challenge.com';
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'challenge.json');
@@ -138,11 +139,20 @@ const server = http.createServer((req, res) => {
   }
 
   if (pathname === '/api/webhook/stripe' && req.method === 'POST') {
-    let body = '';
-    req.on('data', chunk => body += chunk);
+    let rawBody = '';
+    req.on('data', chunk => rawBody += chunk);
     req.on('end', () => {
       try {
-        const event = JSON.parse(body);
+        if (STRIPE_WEBHOOK_SECRET) {
+          const sig = req.headers['stripe-signature'];
+          if (!sig) { res.writeHead(400); res.end('missing stripe-signature'); return; }
+          const parts = Object.fromEntries(sig.split(',').map(p => { const x = p.indexOf('='); return [p.slice(0,x), p.slice(x+1)]; }));
+          const t = parts.t; const v1 = parts.v1;
+          const expected = crypto.createHmac('sha256', STRIPE_WEBHOOK_SECRET).update(t + '.' + rawBody, 'utf8').digest('hex');
+          if (expected !== v1) { res.writeHead(400); res.end('bad signature'); return; }
+          if (Math.floor(Date.now()/1000) - Number(t) > 300) { res.writeHead(400); res.end('timestamp too old'); return; }
+        }
+        const event = JSON.parse(rawBody);
         const obj = event.data && event.data.object;
         console.log('Stripe webhook: ' + event.type);
         if (event.type === 'checkout.session.completed' && obj) {
