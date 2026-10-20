@@ -52,7 +52,7 @@ async function createCheckoutSession(email, code) {
     mode: 'payment',
     'line_items[0][price_data][currency]': 'usd',
     'line_items[0][price_data][unit_amount]': '100',
-    'line_items[0][price_data][product_data][name]': 'Le Défi du 1 $',
+    'line_items[0][quantity]': '1',
     success_url: BASE_URL + '/?paid=1&code=' + code,
     cancel_url: BASE_URL + '/?cancelled=1',
     'metadata[code]': code,
