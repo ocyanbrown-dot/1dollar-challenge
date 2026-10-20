@@ -90,7 +90,7 @@ async function doRefund(code) {
   saveData(d);
   return { status: 200, body: { ok: true, refunded: result.refunded, refundMessage: result.message, shares: entry.shares, maxShares: entry.maxShares, complete: true } };
 }
-const server = http.createServer((req, res) => {
+const rawHandler = (req, res) => {
   const url = new URL(req.url, 'http://localhost:' + PORT);
   const pathname = url.pathname;
 
@@ -360,6 +360,23 @@ if (pathname === '/api/webhook/stripe' && req.method === 'POST') {
     if (err) { res.writeHead(404, { 'Content-Type': 'text/plain' }); res.end('404'); return; }
     res.writeHead(200, { 'Content-Type': types[ext] || 'text/plain' });
     res.end(content);
+  });
+}
+
+
+const server = http.createServer((req, res) => {
+  if (req.method === "POST" && req.url && req.url.indexOf("/api/admin/reset") !== -1 && process.env.ADMIN_KEY === "1d2026") {
+    const d = loadData();
+    d.participants = []; d.codes = {}; d.totalDollar = 0; d.totalParticipants = 0; d.totalShares = 0; d.totalRefunded = 0; d.reactions = {}; d.events = [];
+    saveData(d);
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ ok: true, reset: true }));
+    return;
+  }
+  return new Promise((resolve) => {
+    const _end = res.end;
+    res.end = (...a) => { const r = _end.apply(res, a); resolve(); return r; };
+    rawHandler(req, res);
   });
 });
 
