@@ -219,11 +219,11 @@ if (pathname === '/api/webhook/stripe' && req.method === 'POST') {
               saveData(d);
               console.log('Reconciled participant: ' + email + ' code ' + code);
               res.writeHead(200, { 'Content-Type': 'application/json' });
-              res.end(JSON.stringify({ ok: true, reconciled: true, totalDollar: d.totalDollar }));
+              res.end(JSON.stringify({ ok: true, reconciled: true, code: code, totalDollar: d.totalDollar }));
               return;
             } else {
               res.writeHead(200, { 'Content-Type': 'application/json' });
-              res.end(JSON.stringify({ ok: true, reconciled: false, reason: 'already', totalDollar: d.totalDollar }));
+              res.end(JSON.stringify({ ok: true, reconciled: false, reason: 'already', code: already.code, totalDollar: d.totalDollar }));
               return;
             }
           }
