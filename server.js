@@ -48,11 +48,11 @@ function stripeRequest(method, endpoint, params) {
 }
 
 async function createCheckoutSession(email, code) {
-  const params = {
-    'line_items[0][price]': 'price_1USU1Q1xcm8qAPpaKsSuJux1',
+    'line_items[0][price_data][currency]': 'usd',
+    'line_items[0][price_data][unit_amount]': '100',
+    'line_items[0][price_data][product_data][name]': 'Le Défi du 1 $',
     'line_items[0][quantity]': '1',
     success_url: BASE_URL + '/?paid=1&code=' + code,
-    'line_items[0][quantity]': '1',
     success_url: BASE_URL + '/?paid=1&code=' + code,
     cancel_url: BASE_URL + '/?cancelled=1',
     'metadata[code]': code,
