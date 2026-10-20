@@ -57,9 +57,9 @@ async function createCheckoutSession(email, code) {
     'metadata[code]': code,
     'metadata[type]': '1dollar-challenge'
   };
-  };
   if (email) params['customer_email'] = email;
   return stripeRequest('POST', '/v1/checkout/sessions', params);
+}
 
 }
 
