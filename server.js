@@ -138,7 +138,21 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (pathname === '/api/webhook/stripe' && req.method === 'POST') {
+  
+// Retrieve code by email (for "I already paid" flow)
+if (pathname === '/api/code-by-email' && req.method === 'GET') {
+  const email = (req.url.split('?')[1] || '').match(/email=([^&]+)/);
+  if (!email) { res.writeHead(400); res.end(JSON.stringify({ ok: false, error: 'email required' })); return; }
+  const decodedEmail = decodeURIComponent(email[1]).toLowerCase();
+  const d = loadData();
+  const p = d.participants.find(p => p.email === decodedEmail);
+  if (!p) { res.writeHead(404); res.end(JSON.stringify({ ok: false, error: 'no payment found for this email' })); return; }
+  const c = d.codes[p.code];
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ ok: true, code: p.code, email: p.email, shares: c ? c.shares : 0, maxShares: c ? c.maxShares : 3, refunded: c ? !!c.refunded : false }));
+  return;
+}
+if (pathname === '/api/webhook/stripe' && req.method === 'POST') {
     let rawBody = '';
     req.on('data', chunk => rawBody += chunk);
     req.on('end', () => {
@@ -347,4 +361,5 @@ server.listen(PORT, () => {
   console.log('Server: http://localhost:' + PORT);
   console.log('Stripe key: ' + STRIPE_SECRET_KEY.substring(0, 15) + '...');
 });
+
 
